@@ -1,0 +1,14 @@
+[package]
+name = "libicsneo-sys"
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+author = "David Rebbe <drebbe@intrepidcs.com>"
+readme = "readme.md"
+
+[build-dependencies]
+bindgen = "0.60.*"
+cmake = "0.1.48"
+path-clean = "0.1.*"
+
+[dependencies]
