@@ -7,7 +7,7 @@ repository = "https://github.com/intrepidcs/libicsneo-rs-sys"
 author = "David Rebbe <drebbe@intrepidcs.com>"
 readme = "readme.md"
 description = "Rust system level crate for libicsneo"
-keywords = ["sys", "libicsneo", "intrepidcs", "CAN", "LIN", "Ethernet", "neoVI", "automotive"]
+keywords = ["sys"]
 
 [build-dependencies]
 bindgen = "0.60.*"
