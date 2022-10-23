@@ -3,8 +3,11 @@ name = "libicsneo-sys"
 version = "0.1.0"
 edition = "2021"
 license = "MIT"
+repository = "https://github.com/intrepidcs/libicsneo-rs-sys"
 author = "David Rebbe <drebbe@intrepidcs.com>"
 readme = "readme.md"
+description = "Rust system level crate for libicsneo"
+keywords = ["sys", "libicsneo", "intrepidcs", "CAN", "LIN", "Ethernet", "neoVI", "automotive"]
 
 [build-dependencies]
 bindgen = "0.60.*"
