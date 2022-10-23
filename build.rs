@@ -10,6 +10,30 @@ use path_clean::clean;
 
 
 fn main() {
+    // checkout git submodule
+    let output = std::process::Command::new("git")
+        .args([
+            "submodule",
+            "update",
+            "--init",
+        ])
+        .output()
+        .expect("Failed to fetch git submodules!");
+    // Make sure git was successful!
+    if !output.status.success() {
+        println!("cargo:warning=git return code: {}", output.status);
+        let stdout = std::str::from_utf8(&output.stdout).unwrap();
+        for line in stdout.split("\n") {
+            println!("cargo:warning=git stdout: {}", line);
+        }
+        let stderr = std::str::from_utf8(&output.stderr).unwrap();
+        for line in stderr.split("\n") {
+            println!("cargo:warning=git stderr: {}", line);
+        }
+        panic!("Failed to fetch git submodules!");
+    }   
+    
+
     let path = format!("{}/src/libicsneo", env!("CARGO_MANIFEST_DIR"));
     let libicsneo_path = std::path::PathBuf::from(clean(&path));
     if libicsneo_path.join("CMakeLists.txt").exists() {
