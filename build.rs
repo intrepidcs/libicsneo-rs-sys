@@ -10,13 +10,17 @@ use path_clean::clean;
 
 
 fn main() {
-    // checkout git submodule
+    // Get the path of libicsneo
+    let path = format!("{}/src/libicsneo", env!("CARGO_MANIFEST_DIR"));
+    let libicsneo_path = std::path::PathBuf::from(clean(&path));
+    // checkout the submodule if needed
     let output = std::process::Command::new("git")
         .args([
             "submodule",
             "update",
             "--init",
         ])
+        .current_dir(path)
         .output()
         .expect("Failed to fetch git submodules!");
     // Make sure git was successful!
@@ -32,16 +36,12 @@ fn main() {
         }
         panic!("Failed to fetch git submodules!");
     }   
-    
-
-    let path = format!("{}/src/libicsneo", env!("CARGO_MANIFEST_DIR"));
-    let libicsneo_path = std::path::PathBuf::from(clean(&path));
+    // Check to make sure CMakeLists.txt exists
     if libicsneo_path.join("CMakeLists.txt").exists() {
         println!("cargo:warning=Found CMakeLists.txt at: {}", libicsneo_path.display());
     } else {
         panic!("CMakeLists.txt not found at {}", libicsneo_path.display());
     }
-    
     // Run cmake on libicsneo
     let dst = Config::new(libicsneo_path.clone())
         .build_target("icsneoc")
@@ -56,11 +56,9 @@ fn main() {
     println!("cargo:rustc-link-search=native={}", dst.join("build/Debug").display());
     println!("cargo:rustc-link-search=native={}", dst.join("build/Release").display());
     println!("cargo:rustc-link-lib=static=icsneoc");
-
     // lets generate the bindings
     let include_path = libicsneo_path.join("include");
     println!("cargo:warning=icsneo include path: {:?}", include_path);
-
     println!("cargo:warning={}", include_path.display());
     let bindings = bindgen::Builder::default()
         .header("wrapper.h")
