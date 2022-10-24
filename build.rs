@@ -13,6 +13,8 @@ fn main() {
     // Get the path of libicsneo
     let path = format!("{}/src/libicsneo", env!("CARGO_MANIFEST_DIR"));
     let libicsneo_path = std::path::PathBuf::from(clean(&path));
+    // This seems to not be needed when including this as a dependency? Why?
+    /*
     // checkout the submodule if needed
     let output = std::process::Command::new("git")
         .args([
@@ -35,7 +37,8 @@ fn main() {
             println!("cargo:warning=git stderr: {}", line);
         }
         panic!("Failed to fetch git submodules!");
-    }   
+    } 
+    */
     // Check to make sure CMakeLists.txt exists
     if libicsneo_path.join("CMakeLists.txt").exists() {
         println!("cargo:warning=Found CMakeLists.txt at: {}", libicsneo_path.display());
