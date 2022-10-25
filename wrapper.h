@@ -5,12 +5,15 @@
 #include <stdbool.h>
 #include <time.h>
 
+#ifdef _WIN32
 #ifdef ICSNEOC_MAKEDLL
 #define DLLExport __declspec(dllexport)
 #else
 #define DLLExport __declspec(dllimport)
-#endif
-#define LegacyDLLExport DLLExport _stdcall
+#endif // ICSNEOC_MAKEDLL
+#else
+#define DLLExport
+#endif // _WIN32
 
 #ifdef __cplusplus
 extern "C" {
