@@ -43,6 +43,7 @@ fn _prepare_git_submodule(libicsneo_path: &PathBuf) {
     } 
 }
 
+#[cfg(feature = "build_libicsneo")]
 fn build_libicsneo(libicsneo_path: &PathBuf) {
     // Check to make sure CMakeLists.txt exists
     if libicsneo_path.join("CMakeLists.txt").exists() {
@@ -70,6 +71,10 @@ fn build_libicsneo(libicsneo_path: &PathBuf) {
     println!("cargo:rustc-link-search=native={}", dst.join("build/Debug").display());
     println!("cargo:rustc-link-search=native={}", dst.join("build/Release").display());
     println!("cargo:rustc-link-lib=static=icsneoc");
+}
+
+#[cfg(not(feature = "build_libicsneo"))]
+fn build_libicsneo(_: &PathBuf) {
 }
 
 fn generate_bindings(libicsneo_path: &PathBuf) {

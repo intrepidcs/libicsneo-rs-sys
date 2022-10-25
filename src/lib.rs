@@ -1,3 +1,5 @@
+//! Rust sys level crate providing a cbindgen API for libicsneo (https://github.com/intrepidcs/libicsneo)
+//! If unsure, don't use this crate and use libicsneo-rs instead.
 // Suppress the flurry of warnings caused by using "C" naming conventions
 #![allow(non_upper_case_globals)]
 #![allow(non_camel_case_types)]
