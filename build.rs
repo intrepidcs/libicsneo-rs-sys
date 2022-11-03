@@ -3,11 +3,12 @@ extern crate bindgen;
 extern crate cmake;
 extern crate path_clean;
 
+
+use path_clean::clean;
 use std::env;
 use std::path::PathBuf;
-use cmake::Config;
-use path_clean::clean;
 
+#[cfg(feature = "build_libicsneo")]
 fn is_release_build() -> bool {
     let profile = std::env::var("PROFILE").unwrap();
     match profile.as_str() {
@@ -20,11 +21,7 @@ fn _prepare_git_submodule(libicsneo_path: &PathBuf) {
     // This seems to not be needed when including this as a dependency? Why?
     // checkout the submodule if needed
     let output = std::process::Command::new("git")
-        .args([
-            "submodule",
-            "update",
-            "--init",
-        ])
+        .args(["submodule", "update", "--init"])
         .current_dir(libicsneo_path)
         .output()
         .expect("Failed to fetch git submodules!");
@@ -40,14 +37,19 @@ fn _prepare_git_submodule(libicsneo_path: &PathBuf) {
             println!("cargo:warning=git stderr: {}", line);
         }
         panic!("Failed to fetch git submodules!");
-    } 
+    }
 }
 
 #[cfg(feature = "build_libicsneo")]
 fn build_libicsneo(libicsneo_path: &PathBuf) {
+    use cmake::Config;
+
     // Check to make sure CMakeLists.txt exists
     if libicsneo_path.join("CMakeLists.txt").exists() {
-        println!("cargo:warning=Found CMakeLists.txt at: {}", libicsneo_path.display());
+        println!(
+            "cargo:warning=Found CMakeLists.txt at: {}",
+            libicsneo_path.display()
+        );
     } else {
         panic!("CMakeLists.txt not found at {}", libicsneo_path.display());
     }
@@ -57,25 +59,42 @@ fn build_libicsneo(libicsneo_path: &PathBuf) {
         "Debug"
     };
     // Run cmake on libicsneo
-    let dst = Config::new(libicsneo_path.clone())
-        .build_target("icsneoc")
-        .define("LIBICSNEO_BUILD_EXAMPLES", "OFF")
-        .define("LIBICSNEO_BUILD_ICSNEOC_STATIC", "ON")
-        .define("LIBICSNEO_BUILD_ICSNEOLEGACY", "OFF")
-        .define("CMAKE_BUILD_TYPE", build_config_type)
-        .build();
-    // Debug output for lib path
-    println!("cargo:warning=icsneoc.lib search path: {:?}", dst.join("build/Debug").display());
-    println!("cargo:warning=icsneoc.lib search path: {:?}", dst.join("build/Release").display());
+    let mut config = Config::new(libicsneo_path.clone());
+    #[allow(unused_mut)]
+    let mut config = config.build_target("ALL_BUILD")
+        .define("LIBICSNEO_BUILD_ICSNEOC_STATIC", "BOOL:ON")
+        .define("CMAKE_BUILD_TYPE", build_config_type);
+    // Enable parallel builds here if feature is enabled
+    let config = if cfg!(feature = "msvc_parallel_build") {
+        // We always assume MSVC and msbuild.exe here
+        if cfg!(target_os = "windows") {
+            // TODO: This seems to not be working due to --parallel NUM_JOBS being passed into cmake.
+            println!("cargo:warning=Enabling parallel build for msbuild.exe");
+            config.build_arg("/m")
+        } else {
+            config
+        }
+    } else {
+        config
+    };
+    let dst = config.build();
+    // output for lib path
+    println!(
+        "cargo:warning=icsneoc.lib search path: {:?}",
+        dst.join(format!("build/{build_config_type}")).display()
+    );
     // Configure the search path and lib name to link to
-    println!("cargo:rustc-link-search=native={}", dst.join("build/Debug").display());
-    println!("cargo:rustc-link-search=native={}", dst.join("build/Release").display());
-    println!("cargo:rustc-link-lib=static=icsneoc");
+    println!(
+        "cargo:rustc-link-search=native={}",
+        dst.join(format!("build/{build_config_type}")).display()
+    );
+    println!("cargo:rustc-link-lib=static=icsneoc-static");
+    //println!("cargo:rustc-link-lib=fatfs");
+    //println!("cargo:rustc-link-lib=icsneocpp");
 }
 
 #[cfg(not(feature = "build_libicsneo"))]
-fn build_libicsneo(_: &PathBuf) {
-}
+fn build_libicsneo(_: &PathBuf) {}
 
 fn generate_bindings(libicsneo_path: &PathBuf) {
     let include_path = libicsneo_path.join("include");
@@ -95,14 +114,17 @@ fn generate_bindings(libicsneo_path: &PathBuf) {
 
 fn main() {
     // Get the path of libicsneo
-    let path = format!("{}/src/libicsneo", env!("CARGO_MANIFEST_DIR"));
+    let path = std::env::var("LIBICSNEO_PATH")
+        .unwrap_or(format!("{}/src/libicsneo", env!("CARGO_MANIFEST_DIR")));
     let libicsneo_path = std::path::PathBuf::from(clean(&path));
-    
+
     if std::env::var("DOCS_RS").is_err() {
-        // _prepare_git_submodule(&libicsneo_path);
+        // We don't need to checkout the submodule if we are using a custom libicsneo path
+        if std::env::var("LIBICSNEO_PATH").is_err() {
+            _prepare_git_submodule(&libicsneo_path);
+        }
         build_libicsneo(&libicsneo_path);
     }
     // lets generate the bindings
     generate_bindings(&libicsneo_path);
-    
 }

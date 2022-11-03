@@ -1,6 +1,6 @@
 [package]
 name = "libicsneo-sys"
-version = "0.1.6"
+version = "0.1.7"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/intrepidcs/libicsneo-rs-sys"
@@ -10,8 +10,9 @@ description = "Rust system level crate for libicsneo"
 keywords = ["sys"]
 
 [features]
-default = []
+default = ["build_libicsneo", "msvc_parallel_build"]
 build_libicsneo = []
+msvc_parallel_build = ["build_libicsneo"]
 
 [build-dependencies]
 bindgen = "0.60.*"
