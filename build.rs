@@ -83,14 +83,20 @@ fn build_libicsneo(libicsneo_path: &PathBuf) {
         "cargo:warning=icsneoc.lib search path: {:?}",
         dst.join(format!("build/{build_config_type}")).display()
     );
-    // Configure the search path and lib name to link to
+    // Configure the search path and lib name to link to for icsneoc-static and icsneocpp
     println!(
         "cargo:rustc-link-search=native={}",
         dst.join(format!("build/{build_config_type}")).display()
     );
     println!("cargo:rustc-link-lib=static=icsneoc-static");
-    //println!("cargo:rustc-link-lib=fatfs");
-    //println!("cargo:rustc-link-lib=icsneocpp");
+    println!("cargo:rustc-link-lib=icsneocpp");
+    // Configure the search path and lib name to link to for fatfs
+    println!("cargo:warning=fatfs.lib search path: {}/build/third-party/fatfs/{build_config_type}", dst.display());
+    // Configure the search path and lib name to link to
+    println!(
+        "cargo:rustc-link-search=native={}/build/third-party/fatfs/{build_config_type}", dst.display()
+    );
+    println!("cargo:rustc-link-lib=fatfs");
 }
 
 #[cfg(not(feature = "build_libicsneo"))]
