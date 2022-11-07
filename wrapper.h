@@ -9,7 +9,7 @@
 #ifdef ICSNEOC_MAKEDLL
 #define DLLExport __declspec(dllexport)
 #else
-#define DLLExport __declspec(dllimport)
+#define DLLExport
 #endif // ICSNEOC_MAKEDLL
 #else
 #define DLLExport

@@ -17,6 +17,29 @@ fn is_release_build() -> bool {
         _ => return false,
     }
 }
+
+fn _checkout_libicsneo_repo(libicsneo_path: &PathBuf) {
+    let output = std::process::Command::new("git")
+        .args(["clone", "git@github.com:intrepidcs/libicsneo.git", "."])
+        .current_dir(libicsneo_path)
+        .output()
+        .expect("Failed to fetch git submodules!");
+    // Make sure git was successful!
+    if !output.status.success() {
+        println!("cargo:warning=git return code: {}", output.status);
+        let stdout = std::str::from_utf8(&output.stdout).unwrap();
+        for line in stdout.split("\n") {
+            println!("cargo:warning=git stdout: {}", line);
+        }
+        let stderr = std::str::from_utf8(&output.stderr).unwrap();
+        for line in stderr.split("\n") {
+            println!("cargo:warning=git stderr: {}", line);
+        }
+        _checkout_libicsneo_repo(&libicsneo_path);
+        panic!("Failed to clone libicsneo github repo!");
+    }
+}
+
 fn _prepare_git_submodule(libicsneo_path: &PathBuf) {
     // This seems to not be needed when including this as a dependency? Why?
     // checkout the submodule if needed
@@ -35,8 +58,10 @@ fn _prepare_git_submodule(libicsneo_path: &PathBuf) {
         let stderr = std::str::from_utf8(&output.stderr).unwrap();
         for line in stderr.split("\n") {
             println!("cargo:warning=git stderr: {}", line);
+        
         }
-        panic!("Failed to fetch git submodules!");
+        // If we are a dependency in another crate we aren't a git repo anymore.
+        _checkout_libicsneo_repo(&libicsneo_path);
     }
 }
 
@@ -125,10 +150,12 @@ fn main() {
     let libicsneo_path = std::path::PathBuf::from(clean(&path));
 
     if std::env::var("DOCS_RS").is_err() {
+        /*
         // We don't need to checkout the submodule if we are using a custom libicsneo path
         if std::env::var("LIBICSNEO_PATH").is_err() {
             _prepare_git_submodule(&libicsneo_path);
         }
+        */
         build_libicsneo(&libicsneo_path);
     }
     // lets generate the bindings
