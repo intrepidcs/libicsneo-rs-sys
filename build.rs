@@ -1,8 +1,4 @@
 #![windows_subsystem = "console"]
-//extern crate bindgen;
-//extern crate cmake;
-//extern crate path_clean;
-
 use bindgen;
 use cmake;
 use path_clean::clean;
