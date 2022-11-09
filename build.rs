@@ -94,36 +94,28 @@ fn build_libicsneo(libicsneo_path: &PathBuf) {
             Ok(_) => {},
             Err(e) => panic!("Failed to find ninja executable in system path. Is it installed? (Error: {:#?})", e),
         };
-        config.generator("Ninja").no_build_target(true)
+        config.generator("Ninja Multi-Config").no_build_target(true)
     } else {
         config
     };
     let dst = config.build();
-    // Ninja doesn't seperate by Debug/Release directories so lets not specify it here for
-    // the library search paths below.
-    let build_config_path = if cfg!(feature = "ninja") {
-        ""
-    } else {
-        build_config_type
-    };
-
     // output for lib path
     println!(
         "cargo:warning=icsneoc.lib search path: {:?}",
-        dst.join(format!("build/{build_config_path}")).display()
+        dst.join(format!("build/{build_config_type}")).display()
     );
     // Configure the search path and lib name to link to for icsneoc-static and icsneocpp
     println!(
         "cargo:rustc-link-search=native={}",
-        dst.join(format!("build/{build_config_path}")).display()
+        dst.join(format!("build/{build_config_type}")).display()
     );
     println!("cargo:rustc-link-lib=static=icsneoc-static");
     println!("cargo:rustc-link-lib=icsneocpp");
     // Configure the search path and lib name to link to for fatfs
-    println!("cargo:warning=fatfs.lib search path: {}/build/third-party/fatfs/{build_config_path}", dst.display());
+    println!("cargo:warning=fatfs.lib search path: {}/build/third-party/fatfs/{build_config_type}", dst.display());
     // Configure the search path and lib name to link to
     println!(
-        "cargo:rustc-link-search=native={}/build/third-party/fatfs/{build_config_path}", dst.display()
+        "cargo:rustc-link-search=native={}/build/third-party/fatfs/{build_config_type}", dst.display()
     );
     println!("cargo:rustc-link-lib=fatfs");
 }

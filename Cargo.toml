@@ -1,6 +1,6 @@
 [package]
 name = "libicsneo-sys"
-version = "0.1.11"
+version = "0.1.12"
 edition = "2021"
 license = "MIT"
 repository = "https://github.com/intrepidcs/libicsneo-rs-sys"
@@ -10,7 +10,7 @@ description = "Rust system level crate for libicsneo"
 keywords = ["sys"]
 
 [features]
-default = ["build_libicsneo"]
+default = ["build_libicsneo", "ninja"]
 build_libicsneo = []
 ninja = ["build_libicsneo"]
 
