@@ -1,12 +1,14 @@
 #![windows_subsystem = "console"]
-extern crate bindgen;
-extern crate cmake;
-extern crate path_clean;
+//extern crate bindgen;
+//extern crate cmake;
+//extern crate path_clean;
 
-
+use bindgen;
+use cmake;
 use path_clean::clean;
 use std::env;
 use std::path::PathBuf;
+use which;
 
 #[cfg(feature = "build_libicsneo")]
 fn is_release_build() -> bool {
@@ -89,37 +91,43 @@ fn build_libicsneo(libicsneo_path: &PathBuf) {
     let mut config = config.build_target("ALL_BUILD")
         .define("LIBICSNEO_BUILD_ICSNEOC_STATIC", "BOOL:ON")
         .define("CMAKE_BUILD_TYPE", build_config_type);
-    // Enable parallel builds here if feature is enabled
-    let config = if cfg!(feature = "msvc_parallel_build") {
-        // We always assume MSVC and msbuild.exe here
-        if cfg!(target_os = "windows") {
-            // TODO: This seems to not be working due to --parallel NUM_JOBS being passed into cmake.
-            println!("cargo:warning=Enabling parallel build for msbuild.exe");
-            config.build_arg("/m")
-        } else {
-            config
-        }
+    // Lets use ninja if the feature is enabled
+    let config = if cfg!(feature = "ninja") {
+        // Check to make sure ninja exists on this platform's path
+        match which::which("ninja") {
+            Ok(_) => {},
+            Err(e) => panic!("Failed to find ninja executable in system path. Is it installed? (Error: {:#?})", e),
+        };
+        config.generator("Ninja").no_build_target(true)
     } else {
         config
     };
     let dst = config.build();
+    // Ninja doesn't seperate by Debug/Release directories so lets not specify it here for
+    // the library search paths below.
+    let build_config_path = if cfg!(feature = "ninja") {
+        ""
+    } else {
+        build_config_type
+    };
+
     // output for lib path
     println!(
         "cargo:warning=icsneoc.lib search path: {:?}",
-        dst.join(format!("build/{build_config_type}")).display()
+        dst.join(format!("build/{build_config_path}")).display()
     );
     // Configure the search path and lib name to link to for icsneoc-static and icsneocpp
     println!(
         "cargo:rustc-link-search=native={}",
-        dst.join(format!("build/{build_config_type}")).display()
+        dst.join(format!("build/{build_config_path}")).display()
     );
     println!("cargo:rustc-link-lib=static=icsneoc-static");
     println!("cargo:rustc-link-lib=icsneocpp");
     // Configure the search path and lib name to link to for fatfs
-    println!("cargo:warning=fatfs.lib search path: {}/build/third-party/fatfs/{build_config_type}", dst.display());
+    println!("cargo:warning=fatfs.lib search path: {}/build/third-party/fatfs/{build_config_path}", dst.display());
     // Configure the search path and lib name to link to
     println!(
-        "cargo:rustc-link-search=native={}/build/third-party/fatfs/{build_config_type}", dst.display()
+        "cargo:rustc-link-search=native={}/build/third-party/fatfs/{build_config_path}", dst.display()
     );
     println!("cargo:rustc-link-lib=fatfs");
 }
