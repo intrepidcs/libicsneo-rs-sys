@@ -26,55 +26,138 @@ typedef uint32_t devicetype_t;
 typedef uint16_t neonetid_t;
 typedef uint8_t neonettype_t;
 
-#define ICSNEO_DEVICETYPE_UNKNOWN ((devicetype_t)0x00000000)
-#define ICSNEO_DEVICETYPE_BLUE ((devicetype_t)0x00000001)
-#define ICSNEO_DEVICETYPE_ECU_AVB ((devicetype_t)0x00000002)
-#define ICSNEO_DEVICETYPE_RADSUPERMOON ((devicetype_t)0x00000003)
-#define ICSNEO_DEVICETYPE_DW_VCAN ((devicetype_t)0x00000004)
-#define ICSNEO_DEVICETYPE_RADMOON2 ((devicetype_t)0x00000005)
-#define ICSNEO_DEVICETYPE_RADMARS ((devicetype_t)0x00000006)
-#define ICSNEO_DEVICETYPE_VCAN4_1 ((devicetype_t)0x00000007)
-#define ICSNEO_DEVICETYPE_FIRE ((devicetype_t)0x00000008)
-#define ICSNEO_DEVICETYPE_RADPLUTO ((devicetype_t)0x00000009)
-#define ICSNEO_DEVICETYPE_VCAN4_2EL ((devicetype_t)0x0000000a)
-#define ICSNEO_DEVICETYPE_RADIO_CANHUB ((devicetype_t)0x0000000b)
-#define ICSNEO_DEVICETYPE_NEOECU12 ((devicetype_t)0x0000000c)
-#define ICSNEO_DEVICETYPE_OBD2_LCBADGE ((devicetype_t)0x0000000d)
-#define ICSNEO_DEVICETYPE_RADMOONDUO ((devicetype_t)0x0000000e)
-#define ICSNEO_DEVICETYPE_FIRE3 ((devicetype_t)0x0000000f)
-#define ICSNEO_DEVICETYPE_VCAN3 ((devicetype_t)0x00000010)
-#define ICSNEO_DEVICETYPE_RADJUPITER ((devicetype_t)0x00000011)
-#define ICSNEO_DEVICETYPE_VCAN4_IND ((devicetype_t)0x00000012)
-#define ICSNEO_DEVICETYPE_RADGIGASTAR ((devicetype_t)0x00000013)
-#define ICSNEO_DEVICETYPE_RED2 ((devicetype_t)0x00000014)
-#define ICSNEO_DEVICETYPE_ETHERBADGE ((devicetype_t)0x00000016)
-#define ICSNEO_DEVICETYPE_RADEPSILON ((devicetype_t)0x00000018)
-#define ICSNEO_DEVICETYPE_RED ((devicetype_t)0x00000040)
-#define ICSNEO_DEVICETYPE_ECU ((devicetype_t)0x00000080)
-#define ICSNEO_DEVICETYPE_IEVB ((devicetype_t)0x00000100)
-#define ICSNEO_DEVICETYPE_PENDANT ((devicetype_t)0x00000200)
-#define ICSNEO_DEVICETYPE_OBD2_PRO ((devicetype_t)0x00000400)
-#define ICSNEO_DEVICETYPE_ECUCHIP_UART ((devicetype_t)0x00000800)
-#define ICSNEO_DEVICETYPE_PLASMA ((devicetype_t)0x00001000)
-#define ICSNEO_DEVICETYPE_DONT_REUSE0 ((devicetype_t)0x00002000) // Previously FIRE_VNET
-#define ICSNEO_DEVICETYPE_NEOANALOG ((devicetype_t)0x00004000)
-#define ICSNEO_DEVICETYPE_CT_OBD ((devicetype_t)0x00008000)
-#define ICSNEO_DEVICETYPE_DONT_REUSE1 ((devicetype_t)0x00010000) // Previously PLASMA_1_12
-#define ICSNEO_DEVICETYPE_DONT_REUSE2 ((devicetype_t)0x00020000) // Previously PLASMA_1_13
-#define ICSNEO_DEVICETYPE_ION ((devicetype_t)0x00040000)
-#define ICSNEO_DEVICETYPE_RADSTAR ((devicetype_t)0x00080000)
-#define ICSNEO_DEVICETYPE_DONT_REUSE3 ((devicetype_t)0x00100000) // Previously ION3
-#define ICSNEO_DEVICETYPE_VCAN4_4 ((devicetype_t)0x00200000)
-#define ICSNEO_DEVICETYPE_VCAN4_2 ((devicetype_t)0x00400000)
-#define ICSNEO_DEVICETYPE_CMPROBE ((devicetype_t)0x00800000)
-#define ICSNEO_DEVICETYPE_EEVB ((devicetype_t)0x01000000)
-#define ICSNEO_DEVICETYPE_VCANRF ((devicetype_t)0x02000000)
-#define ICSNEO_DEVICETYPE_FIRE2 ((devicetype_t)0x04000000)
-#define ICSNEO_DEVICETYPE_FLEX ((devicetype_t)0x08000000)
-#define ICSNEO_DEVICETYPE_RADGALAXY ((devicetype_t)0x10000000)
-#define ICSNEO_DEVICETYPE_RADSTAR2 ((devicetype_t)0x20000000)
-#define ICSNEO_DEVICETYPE_VIVIDCAN ((devicetype_t)0x40000000)
-#define ICSNEO_DEVICETYPE_OBD2_SIM ((devicetype_t)0x80000000)
+static const devicetype_t ICSNEO_DEVICETYPE_UNKNOWN = 0x00000000;
+static const devicetype_t ICSNEO_DEVICETYPE_BLUE = 0x00000001;
+static const devicetype_t ICSNEO_DEVICETYPE_ECU_AVB = 0x00000002;
+static const devicetype_t ICSNEO_DEVICETYPE_RADSUPERMOON = 0x00000003;
+static const devicetype_t ICSNEO_DEVICETYPE_DW_VCAN = 0x00000004;
+static const devicetype_t ICSNEO_DEVICETYPE_RADMOON2 = 0x00000005;
+static const devicetype_t ICSNEO_DEVICETYPE_RADMARS = 0x00000006;
+static const devicetype_t ICSNEO_DEVICETYPE_VCAN4_1 = 0x00000007;
+static const devicetype_t ICSNEO_DEVICETYPE_FIRE = 0x00000008;
+static const devicetype_t ICSNEO_DEVICETYPE_RADPLUTO = 0x00000009;
+static const devicetype_t ICSNEO_DEVICETYPE_VCAN4_2EL = 0x0000000a;
+static const devicetype_t ICSNEO_DEVICETYPE_RADIO_CANHUB = 0x0000000b;
+static const devicetype_t ICSNEO_DEVICETYPE_NEOECU12 = 0x0000000c;
+static const devicetype_t ICSNEO_DEVICETYPE_OBD2_LCBADGE = 0x0000000d;
+static const devicetype_t ICSNEO_DEVICETYPE_RADMOONDUO = 0x0000000e;
+static const devicetype_t ICSNEO_DEVICETYPE_FIRE3 = 0x0000000f;
+static const devicetype_t ICSNEO_DEVICETYPE_VCAN3 = 0x00000010;
+static const devicetype_t ICSNEO_DEVICETYPE_RADJUPITER = 0x00000011;
+static const devicetype_t ICSNEO_DEVICETYPE_VCAN4_IND = 0x00000012;
+static const devicetype_t ICSNEO_DEVICETYPE_RADGIGASTAR = 0x00000013;
+static const devicetype_t ICSNEO_DEVICETYPE_RED2 = 0x00000014;
+static const devicetype_t ICSNEO_DEVICETYPE_ETHERBADGE = 0x00000016;
+static const devicetype_t ICSNEO_DEVICETYPE_RADEPSILON = 0x00000018;
+static const devicetype_t ICSNEO_DEVICETYPE_RED = 0x00000040;
+static const devicetype_t ICSNEO_DEVICETYPE_ECU = 0x00000080;
+static const devicetype_t ICSNEO_DEVICETYPE_IEVB = 0x00000100;
+static const devicetype_t ICSNEO_DEVICETYPE_PENDANT = 0x00000200;
+static const devicetype_t ICSNEO_DEVICETYPE_OBD2_PRO = 0x00000400;
+static const devicetype_t ICSNEO_DEVICETYPE_ECUCHIP_UART = 0x00000800;
+static const devicetype_t ICSNEO_DEVICETYPE_PLASMA = 0x00001000;
+static const devicetype_t ICSNEO_DEVICETYPE_DONT_REUSE0 = 0x00002000;
+static const devicetype_t ICSNEO_DEVICETYPE_NEOANALOG = 0x00004000;
+static const devicetype_t ICSNEO_DEVICETYPE_CT_OBD = 0x00008000;
+static const devicetype_t ICSNEO_DEVICETYPE_DONT_REUSE1 = 0x00010000;
+static const devicetype_t ICSNEO_DEVICETYPE_DONT_REUSE2 = 0x00020000;
+static const devicetype_t ICSNEO_DEVICETYPE_ION = 0x00040000;
+static const devicetype_t ICSNEO_DEVICETYPE_RADSTAR = 0x00080000;
+static const devicetype_t ICSNEO_DEVICETYPE_DONT_REUSE3 = 0x00100000;
+static const devicetype_t ICSNEO_DEVICETYPE_VCAN4_4 = 0x00200000;
+static const devicetype_t ICSNEO_DEVICETYPE_VCAN4_2 = 0x00400000;
+static const devicetype_t ICSNEO_DEVICETYPE_CMPROBE = 0x00800000;
+static const devicetype_t ICSNEO_DEVICETYPE_EEVB = 0x01000000;
+static const devicetype_t ICSNEO_DEVICETYPE_VCANRF = 0x02000000;
+static const devicetype_t ICSNEO_DEVICETYPE_FIRE2 = 0x04000000;
+static const devicetype_t ICSNEO_DEVICETYPE_FLEX = 0x08000000;
+static const devicetype_t ICSNEO_DEVICETYPE_RADGALAXY = 0x10000000;
+static const devicetype_t ICSNEO_DEVICETYPE_RADSTAR2 = 0x20000000;
+static const devicetype_t ICSNEO_DEVICETYPE_VIVIDCAN = 0x40000000;
+static const devicetype_t ICSNEO_DEVICETYPE_OBD2_SIM = 0x80000000;
+
+enum EventType {
+	// API Events
+	InvalidNeoDevice = 0x1000, // api
+	RequiredParameterNull = 0x1001,
+	BufferInsufficient = 0x1002,
+	OutputTruncated = 0x1003, // just a warning
+	ParameterOutOfRange = 0x1004,
+	DeviceCurrentlyOpen = 0x1005,
+	DeviceCurrentlyClosed = 0x1006,
+	DeviceCurrentlyOnline = 0x1007,
+	DeviceCurrentlyOffline = 0x1008,
+	DeviceCurrentlyPolling = 0x1009,
+	DeviceNotCurrentlyPolling = 0x1010,
+	UnsupportedTXNetwork = 0x1011,
+	MessageMaxLengthExceeded = 0x1012,
+	ValueNotYetPresent = 0x1013,
+	Timeout = 0x1014,
+	WiVINotSupported = 0x1015,
+
+	// Device Events
+	PollingMessageOverflow = 0x2000,
+	NoSerialNumber = 0x2001, // api
+	IncorrectSerialNumber = 0x2002, // api
+	SettingsReadError = 0x2003,
+	SettingsVersionError = 0x2004,
+	SettingsLengthError = 0x2005,
+	SettingsChecksumError = 0x2006,
+	SettingsNotAvailable = 0x2007,
+	SettingsReadOnly = 0x2008,
+	CANSettingsNotAvailable = 0x2009,
+	CANFDSettingsNotAvailable = 0x2010,
+	LSFTCANSettingsNotAvailable = 0x2011,
+	SWCANSettingsNotAvailable = 0x2012,
+	BaudrateNotFound = 0x2013,
+	UnexpectedNetworkType = 0x2014,
+	DeviceFirmwareOutOfDate = 0x2015,
+	SettingsStructureMismatch = 0x2016,
+	SettingsStructureTruncated = 0x2017,
+	NoDeviceResponse = 0x2018,
+	MessageFormattingError = 0x2019,
+	CANFDNotSupported = 0x2020,
+	RTRNotSupported = 0x2021,
+	DeviceDisconnected = 0x2022,
+	OnlineNotSupported = 0x2023,
+	TerminationNotSupportedDevice = 0x2024,
+	TerminationNotSupportedNetwork = 0x2025,
+	AnotherInTerminationGroupEnabled = 0x2026,
+	NoSerialNumberFW = 0x2027, // A firmware update was already attempted
+	NoSerialNumber12V = 0x2028, // The device must be powered with 12V for communication to be established
+	NoSerialNumberFW12V = 0x2029, // The device must be powered with 12V for communication to be established, a firmware update was already attempted
+	EthPhyRegisterControlNotAvailable = 0x2030, //The device doesn't support Ethernet PHY MDIO access
+	DiskNotSupported = 0x2031,
+	EOFReached = 0x2032,
+	SettingsDefaultsUsed = 0x2033,
+	AtomicOperationRetried = 0x2034,
+	AtomicOperationCompletedNonatomically = 0x2035,
+	WiVIStackRefreshFailed = 0x2036,
+	WiVIUploadStackOverflow = 0x2037,
+	I2CMessageExceedsMaxLength = 0x2038,
+
+	// Transport Events
+	FailedToRead = 0x3000,
+	FailedToWrite = 0x3001,
+	DriverFailedToOpen = 0x3002,
+	DriverFailedToClose = 0x3003,
+	PacketChecksumError = 0x3004,
+	TransmitBufferFull = 0x3005,
+	DeviceInUse = 0x3006,
+	PCAPCouldNotStart = 0x3102,
+	PCAPCouldNotFindDevices = 0x3103,
+	PacketDecodingError = 0x3104,
+	
+	NoErrorFound = 0xFFFFFFFD,
+	TooManyEvents = 0xFFFFFFFE,
+	Unknown = 0xFFFFFFFF
+};
+
+enum EventSeverity {
+	EventInfo = 0x10,
+	EventWarning = 0x20,
+	Error = 0x30
+};
 
 #pragma pack(push, 1)
 
@@ -113,6 +196,51 @@ typedef struct {
 	neomessagetype_t messageType;
 	uint8_t _reserved1[12];
 } neomessage_frame_t;
+
+typedef struct {
+	neomessage_statusbitfield_t status;
+	uint64_t timestamp;
+	uint64_t _reservedTimestamp;
+	const uint8_t* data;
+	size_t length;
+	uint32_t arbid;
+	neonetid_t netid;
+	neonettype_t type;
+	uint8_t dlcOnWire;
+	uint16_t description;
+	neomessagetype_t messageType;
+	uint8_t _reserved1[12];
+} neomessage_can_t;
+
+typedef struct {
+	neomessage_statusbitfield_t status;
+	uint64_t timestamp;
+	uint64_t _reservedTimestamp;
+	size_t _reserved2[2];
+	uint8_t transmitErrorCount;
+	uint8_t receiveErrorCount;
+	uint8_t _reserved3[5];
+	neonetid_t netid;
+	neonettype_t type;
+	neomessagetype_t messageType;
+	uint8_t _reserved4[12];
+} neomessage_can_error_t;
+
+typedef struct {
+	neomessage_statusbitfield_t status;
+	uint64_t timestamp;
+	uint64_t _reservedTimestamp;
+	const uint8_t* data;
+	size_t length;
+	uint8_t preemptionFlags;
+	uint8_t _reservedHeader[3];
+	neonetid_t netid;
+	neonettype_t type;
+	uint8_t _reserved0;
+	uint16_t description;
+	neomessagetype_t messageType;
+	uint8_t _reserved1[12];
+} neomessage_eth_t;
 
 
 typedef struct {
