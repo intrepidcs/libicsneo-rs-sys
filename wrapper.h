@@ -242,6 +242,7 @@ typedef struct {
 	uint8_t _reserved1[12];
 } neomessage_eth_t;
 
+#pragma pack(pop)
 
 typedef struct {
 	const char* description;
@@ -271,8 +272,6 @@ typedef enum _neoio_t {
 	ICSNEO_IO_MISC = (4),
 	ICSNEO_IO_EMISC = (5),
 } neoio_t;
-
-#pragma pack(pop)
 
 /**
  * \brief Find Intrepid hardware connected via USB and Ethernet.
