@@ -76,7 +76,15 @@ fn build_libicsneo(libicsneo_path: &PathBuf) {
     } else {
         panic!("CMakeLists.txt not found at {}", libicsneo_path.display());
     }
-    let build_config_type = if is_release_build() {
+    let build_config_type = if cfg!(target_os = "windows") {
+        // Rust runtime is linked with /MD on windows MSVC... MSVC takes Debug and forces /MDd
+        // https://www.reddit.com/r/rust/comments/dvmzo2/cargo_external_c_library_windows_debugrelease_hell/
+        if is_release_build() {
+            "Release"
+        } else {
+            "RelWithDebInfo"
+        }
+    } else if is_release_build() {
         "Release"
     } else {
         "Debug"
@@ -85,8 +93,10 @@ fn build_libicsneo(libicsneo_path: &PathBuf) {
     let mut config = Config::new(libicsneo_path.clone());
     #[allow(unused_mut)]
     let mut config = config.build_target("ALL_BUILD")
-        .define("LIBICSNEO_BUILD_ICSNEOC_STATIC", "BOOL:ON")
-        .define("CMAKE_BUILD_TYPE", build_config_type);
+        .define("LIBICSNEO_BUILD_ICSNEOC_STATIC:BOOL", "ON")
+        .define("LIBICSNEO_BUILD_EXAMPLES:BOOL", "OFF")
+        .define("LIBICSNEO_BUILD_ICSNEOLEGACY:BOOL", "OFF")
+        .profile(build_config_type); 
     // Lets use ninja if the feature is enabled
     let config = if cfg!(feature = "ninja") {
         // Check to make sure ninja exists on this platform's path
@@ -94,7 +104,7 @@ fn build_libicsneo(libicsneo_path: &PathBuf) {
             Ok(_) => {},
             Err(e) => panic!("Failed to find ninja executable in system path. Is it installed? (Error: {:#?})", e),
         };
-        config.generator("Ninja Multi-Config").no_build_target(true)
+        config.generator("Ninja Multi-Config").build_target("all")
     } else {
         config
     };
