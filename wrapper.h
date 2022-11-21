@@ -408,6 +408,19 @@ typedef enum _neoio_t {
 #define ICSNEO_NETWORK_TYPE_ANY 0xFE // Never actually set as type, but used as flag for filtering
 #define ICSNEO_NETWORK_TYPE_OTHER 0xFF
 
+#define ICSNEO_MESSAGE_TYPE_FRAME (0x0)
+#define ICSNEO_MESSAGE_TYPE_CAN_ERROR_COUNT (0x100)
+#define ICSNEO_MESSAGE_TYPE_INVALID (0x8000)
+#define ICSNEO_MESSAGE_TYPE_RAW_MESSAGE (0x8001)
+#define ICSNEO_MESSAGE_TYPE_READ_SETTINGS (0x8002)
+#define ICSNEO_MESSAGE_TYPE_RESET_STATUS (0x8003)
+#define ICSNEO_MESSAGE_TYPE_DEVICE_VERSION (0x8004)
+#define ICSNEO_MESSAGE_TYPE_MAIN51 (0x8005)
+#define ICSNEO_MESSAGE_TYPE_FLEXRAY_CONTROL (0x8006)
+#define ICSNEO_MESSAGE_TYPE_ETHERNET_PHY_REGISTER (0x8007)
+#define ICSNEO_MESSAGE_TYPE_LOGICAL_DISK_INFO (0x8008)
+#define ICSNEO_MESSAGE_TYPE_EXTENDED_RESPONSE (0x8009)
+
 /**
  * \brief Find Intrepid hardware connected via USB and Ethernet.
  * \param[out] devices Pointer to memory where devices should be written. If NULL, the current number of detected devices is written to count.
