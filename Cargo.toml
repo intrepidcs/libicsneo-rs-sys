@@ -8,6 +8,9 @@ authors = ["David Rebbe <drebbe@intrepidcs.com>"]
 readme = "readme.md"
 description = "Rust system level crate for libicsneo"
 keywords = ["sys"]
+exclude = [
+    "src/libicsneo",
+]
 
 [features]
 default = ["static"]
