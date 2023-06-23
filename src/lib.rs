@@ -14,13 +14,10 @@ mod tests {
 
     #[test]
     fn test_icsneo_findAllDevices() {
-        let mut device_count = 255;
-        let mut devices = [neodevice_t {
-            device: 0 as *mut std::os::raw::c_void,
-            handle: 0i32,
-            serial: [0i8; 7],
-            type_: 0,
-        }; 255];
+        const DEVICE_COUNT_MAX: usize = 255;
+        let mut device_count = DEVICE_COUNT_MAX;
+        let mut devices = [neodevice_t::default(); DEVICE_COUNT_MAX];
+        
         unsafe {
             icsneo_findAllDevices(devices.as_mut_ptr(), &mut device_count);
         }
@@ -34,7 +31,7 @@ mod tests {
                 success = icsneo_openDevice(device);
 
                 // Get the device type string
-                let mut name_length: u64 = 0;
+                let mut name_length: usize = 0;
                 icsneo_getProductNameForType(device.type_, std::ptr::null_mut(), &mut name_length);
                 name_length += 1;
                 let mut name_buffer = vec![0 as std::os::raw::c_char; name_length as usize];
